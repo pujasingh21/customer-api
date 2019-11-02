@@ -7,10 +7,6 @@
 <title></title>
 </head>
 <body>
-<% /* request.getAttribute("customer");
-List<Customer> customer = new ArrayList<Customer>();
-customer.add() */
-out.print("Registered Successfully");
- %>
+ ${status} 
 </body>
 </html>

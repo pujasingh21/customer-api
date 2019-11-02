@@ -1,0 +1,30 @@
+package com.customer.data.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.customer.data.modal.Customer;
+
+@Controller
+public class HomeController {
+	
+	@Autowired
+	Customer customer;
+	@RequestMapping("/")
+	public String home()
+	{
+		return "home";
+	}
+	@RequestMapping("/register")
+	public ModelAndView register(Customer customer)
+	{
+		ModelAndView mv = new ModelAndView();
+		System.out.println("Registered successfully"+customer);
+		mv.addObject("customer", customer);
+		mv.setViewName("Welcome");
+		return  mv;
+	}
+
+}

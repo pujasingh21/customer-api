@@ -1,0 +1,4 @@
+#JSP configuration
+
+spring.mvc.view.prefix=/Jsp/
+spring.mvc.view.suffix=.jsp
