@@ -1,27 +1,66 @@
 package com.customerApi.delete.controller;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
-import com.customerApi.delete.repository.CustomerRepository;
 
-@RestController
-public class CustomerDelete {
+import com.customerApi.delete.modal.Customer;
+
+import com.customerApi.delete.service.CustomerDeleteService;
+
+
+
+@Controller
+public class CustomerDeleteController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(CustomerDeleteController.class);
 	
 	@Autowired
-	CustomerRepository repo;
-	
+	CustomerDeleteService service;
+
 	@DeleteMapping("/deleteCustomer/{id}")
-	
-	@ResponseBody
-	public String deleteCustomer(@PathVariable ("id") int id)
+	public ResponseEntity<Customer> deleteCustomerById(@PathVariable ("id") int id)
 	{
-		System.out.println("Custmer Id"+id);
-		repo.deleteById(id);
-		return "Success";
+		logger.info("Redirect to delete service "+id);
+				
+		boolean result = service.deleteCustomerById(id);
+		 logger.info("Record delete status : "+result);
+		 
+		// return result?new ResponseEntity<>(HttpStatus.OK):new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	       if(result)
+			{
+				return new ResponseEntity<>(HttpStatus.OK);
+			}
+			else
+			{
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+	}
+	
+	@DeleteMapping("/deleteCustomers")
+	public ResponseEntity<Customer> deleteCustomers(Customer customer)
+	{
+		logger.info("Redirect to delete service");
+		
+		boolean result = service.deleteCustomer(customer);
+		
+		//return result?new ResponseEntity<>(HttpStatus.OK):new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		if(result)
+		{
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		else
+		{
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		 
 		 
 	}
 

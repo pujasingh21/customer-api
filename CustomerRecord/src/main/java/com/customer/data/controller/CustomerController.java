@@ -1,45 +1,43 @@
 package com.customer.data.controller;
 
-
-
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 
 import com.customer.data.modal.Customer;
-import com.customer.data.repositary.CustomerRepositary;
 import com.customer.data.service.CustomerService;
 
 
 @Controller
 public class CustomerController {
-	CustomerService customerService = new CustomerService();
+	private static final Logger logger=LoggerFactory.getLogger(CustomerController.class);
 	
 	@Autowired
-	CustomerRepositary repo;
-	@RequestMapping("/")
-	public String home()
-	{
-		return "home";
-	}
-	@PostMapping("/register")
+	CustomerService service;
 	
+	
+	@PostMapping("/register")
 	
 	public ResponseEntity <Customer> register(@RequestBody Customer data)
 	{
-		System.out.println("Registered successfully"+data);
+		logger.info("Redirect to registration service"+data);
+		boolean status =service.addCustomerData(data);
 		
-		repo.save(data);
+		if(status) {
+			return new ResponseEntity<>(data, HttpStatus.OK);
+					}
+		else
+		{
+			return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+			
+		}
 		
-		
-		return new ResponseEntity<>(data, HttpStatus.OK);
+			
 	}
 
 }

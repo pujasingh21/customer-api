@@ -1,5 +1,7 @@
 package com.customerApi.fetch.Controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,27 +10,33 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import com.customerApi.fetch.repository.CustomerRepositary;
+import com.customerApi.fetch.service.CustomerFetchService;
 
 @RestController
 public class CustomergetController {
 	
-	@Autowired
-	CustomerRepositary repo;
+	private static final Logger logger = LoggerFactory.getLogger(CustomergetController.class); 
 	
+	
+	@Autowired
+	private CustomerFetchService customerFetchService;
 	
 	@GetMapping("/getCustomer")
 	@ResponseBody
 	public String getCustomer()
 	{
-		
-		return repo.findAll().toString();		
+		logger.info("Sending request to service layer");
+		String data = customerFetchService.getCustomersData();		
+		return data;		
 		
 	}
 	@GetMapping("getCustomer/{id}")
 	@ResponseBody
 	public String getCustomerById(@PathVariable("id") int id)
 	{
-		return repo.findById(id).toString();
+		logger.info("Redirect to service layer"+id);
+		String customer = customerFetchService.getCustomerDataById(id);
+		return customer;
 	}
 
 }
