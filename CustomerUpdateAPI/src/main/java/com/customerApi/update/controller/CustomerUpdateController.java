@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.customerApi.update.UpdateCustomerService;
 import com.customerApi.update.modal.Customer;
+import com.customerApi.update.service.UpdateCustomerService;
 
 
 @RestController

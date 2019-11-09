@@ -1,4 +1,4 @@
-package com.customerApi.update;
+package com.customerApi.update.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
