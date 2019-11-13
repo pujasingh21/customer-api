@@ -5,23 +5,39 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-
-
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name="customer")
 public class Customer {
 	
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer id;
+	@Id	
+	private int id;
+	
+	//@NotNull
+	//@Size(min=2, message="First Name should have atleast 2 characters")
 	private String firstName;
+	
+	//@NotNull
+	//@Size(min=2, message="Last Name should have atleast 2 characters")
 	private String lastName;
+	
+	//@NotNull
+	//@Size(min=4, message="User Name should have atleast 2 characters")
 	private String username;
+	
+	//@NotNull
+	//@Size(min=8, message="Password should have atleast 8 characters")
 	private String password;
+	
 	private String address;
+	
+	//@NotBlank
+	@Size(min=10, max=11, message="Please enter valid Contact number")
 	private Integer contact;
+	
 	
 	public Customer()
 	{
@@ -58,10 +74,11 @@ public class Customer {
 		this.username = username;
 	}
 
-	public Integer getId() {
+	
+	public int getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	
