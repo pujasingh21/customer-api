@@ -3,10 +3,13 @@ package com.customerApi.api.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.exception.JDBCConnectionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.CannotCreateTransactionException;
 
 import com.customerApi.api.exception.CustomerNotFoundException;
 import com.customerApi.api.modals.Customer;
@@ -20,91 +23,104 @@ public class CustomerService {
 	@Autowired
 	private CustomerRepository customerRepo;
 
-	public boolean addCustomerData(Customer customer) {
-		boolean status = false;
+	public Customer addCustomerData(Customer data) {
+		Customer customer = new Customer();
+
 		try {
-
-			logger.trace("Running post customer service");
-			customerRepo.save(customer);
-			logger.debug("Customer First Name {}, last name {}, sign-in in", customer.getFirstName(),
-					customer.getLastName());
-			status = true;
-		} catch (NullPointerException e) {
-			logger.error("Entered customer record is empty: " + e);
+			customer = customerRepo.save(data);
+			
+		} catch (CannotCreateTransactionException e) {
+			throw new CustomerNotFoundException("Database Connectivity Error", e);
+		} catch (CustomerNotFoundException e) {
+			logger.error("Customers {} record not saved" + e);
+			throw new CustomerNotFoundException("Customer records not found", e);
+		} catch (Exception e) {
+			logger.error("Customer {} record has not saved Successfully " + e);
+			throw new CustomerNotFoundException("Exception in Customer post service", e);
 		}
-
-		return status;
-
+		return customer;
 	}
 
 	public List<Customer> getCustomersData() {
-		logger.trace("Running get customer service :");
-		return customerRepo.findAll();
-	}
+		List<Customer> allCustomer = null;
 
-	public String getCustomerDataById(int id) {
-		logger.trace("Running get customerById service :");
-		Optional<Customer> customer = customerRepo.findById(id);
-
-		if (!customer.isPresent()) {
-
-			logger.error("Customer ID {}" + id);
-			throw new CustomerNotFoundException("id-" + id);
-
-		} else {
-			logger.info("Customer ID {}" + id);
-			return customerRepo.findById(id).toString();
-		}
-
-	}
-
-	public boolean deleteCustomerById(int id) {
-		Customer customer = new Customer();
-		boolean status = false;
-
-		logger.info("Inside delete service:" + customer);
 		try {
-			if (id != 0) {
-
-				customerRepo.deleteById(id);
-				logger.info("Customer ID {}, deleted", id);
-				status = true;
-			} else {
-				logger.info("Enter valid cutomer id");
-				status = false;
-			}
-		} catch (NullPointerException e) {
-			e.printStackTrace();
+			allCustomer = customerRepo.findAll();
+			
+		} catch (CannotCreateTransactionException e) {
+			logger.error("Database connection error" + e);
+			throw new CustomerNotFoundException("Database Connectivity Error", e);
+		} 		
+		catch (CustomerNotFoundException e) {
+			logger.error("Customers record not found" + e);
+			throw new CustomerNotFoundException("Customer records not found", e);
+		} 		
+		catch (Exception e) {
+			logger.error("Exception in Get Customers " + e);
+			throw new CustomerNotFoundException("Exception in Get Customers Request", e);
 		}
 
-		return status;
+		return allCustomer;
 	}
 
-	public boolean deleteCustomer(Customer record) {
-		boolean status = false;
+	public Customer getCustomerDataById(int id) {
+
+		Optional<Customer> customer = null;
 		try {
-			if (record != null) {
-
-				customerRepo.delete(record);
-				;
-				logger.trace("All Customer has been deleted successfully");
-				status = true;
-			} else {
-				logger.warn("Invalid record");
-				status = false;
-			}
-		} catch (NullPointerException e) {
-			e.printStackTrace();
+			customer = customerRepo.findById(id);	
+			
+		} catch (CannotCreateTransactionException e) {
+			logger.error("Database connection error" + e);
+			throw new CustomerNotFoundException("Database Connectivity Error", e);
+		} catch (EmptyResultDataAccessException e) {
+			logger.error("Customer id{} not found" + e);
+			throw new CustomerNotFoundException("Customer id{} not found", e);
+		}catch (Exception e) {			
+			throw new CustomerNotFoundException("Exception in get Customer Request", e);
 		}
-		return status;
+		
+		return customer.get();
 
 	}
+
+	public void deleteCustomerById(int id) {
+		
+		try {
+			
+			customerRepo.deleteById(id);			
+
+		} catch (CannotCreateTransactionException e) {
+			logger.error("Database connection error" + e);
+			throw new CustomerNotFoundException("Database Connectivity Error", e);
+		} catch (EmptyResultDataAccessException e) {
+			logger.error("Customer id{} not found" + e);
+			throw new CustomerNotFoundException("Customer id{} not found", e);
+		} catch (Exception e) {
+			logger.error("Customer {} not found " + e);
+			throw new CustomerNotFoundException("Exception in Customer deletion", e);
+		}
+
+	}
+
+	
 
 	public Customer updateCustomer(Customer data) {
-		logger.debug("Customer First Name {}, last name {}, updated", data.getFirstName(), data.getLastName());
-		customerRepo.save(data);
-		logger.trace("Customer record updated successfully");
-		return data;
+		Customer customer = new Customer();
+		try {
+			customer = customerRepo.save(data);
+
+		} catch (CannotCreateTransactionException e) {
+			logger.error("Database connection error" + e);
+			throw new CustomerNotFoundException("Database Connectivity Error", e);
+		} catch (CustomerNotFoundException e) {
+			logger.error("Customer not found" + e);
+			throw new CustomerNotFoundException("Customer not found", e);
+		}catch (Exception e) {
+			logger.error("Customer has not updated " + e);
+			throw new CustomerNotFoundException("Exception in customer update", e);
+		}
+
+		return customer;
 	}
 
 }
