@@ -25,34 +25,32 @@ import com.customer.api.modals.Customer;
 @RequestMapping("/customer")
 public class Customercontroller {
 
-	@Autowired
-	private Customerservice service;
+    @Autowired
+    private Customerservice service;
 
-	@PostMapping
-	public ResponseEntity<Customer> saveCustomer(@Valid @RequestBody Customer data) {
-		return new ResponseEntity<>(service.addCustomerData(data), HttpStatus.OK);
+    @PostMapping
+    public ResponseEntity<Customer> saveCustomer(@Valid @RequestBody Customer data) {
+        return new ResponseEntity<>(service.addCustomerData(data), HttpStatus.OK);
+    }
+    @GetMapping
+    public ResponseEntity<List<Customer>> getCustomer() {
+        return new ResponseEntity<>(service.getCustomersData(), HttpStatus.OK);
+    }
 
-	}
+    @GetMapping("/{id}")
+    public ResponseEntity<Customer> getCustomerById(@Validated @PathVariable("id") @Min(1) Long id) {
+        return new ResponseEntity<>(service.getCustomerDataById(id), HttpStatus.OK);
+    }
 
-	@GetMapping
-	public ResponseEntity<List<Customer>> getCustomer() {
-		return new ResponseEntity<>(service.getCustomersData(), HttpStatus.OK);
-	}
+    @PutMapping
+    public ResponseEntity<Customer> updateCustomer(@Valid @RequestBody Customer customer) {
+        return new ResponseEntity<>(service.addCustomerData(customer), HttpStatus.OK);
+    }
 
-	@GetMapping("/{id}")
-	public ResponseEntity<Customer> getCustomerById(@Validated  @PathVariable("id") @Min(1) Long id) {
-		return new ResponseEntity<>(service.getCustomerDataById(id), HttpStatus.OK);
-	}
-
-	@PutMapping
-	public ResponseEntity<Customer> updateCustomer(@Valid @RequestBody Customer customer) {
-		return new ResponseEntity<>(service.addCustomerData(customer), HttpStatus.OK);
-	}
-
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Customer> deleteCustomerById(@Min(1) @PathVariable("id") Long id) {
-		service.deleteCustomerById(id);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Customer> deleteCustomerById(@Min(1) @PathVariable("id") Long id) {
+        service.deleteCustomerById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }
