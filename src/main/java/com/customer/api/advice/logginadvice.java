@@ -1,4 +1,4 @@
-package com.customerApi.api.advice;
+package com.customer.api.advice;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -12,9 +12,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Aspect
 @Component
-public class logginAdvice {
+public class logginadvice {
 
-	Logger log = LoggerFactory.getLogger(logginAdvice.class);
+	Logger log = LoggerFactory.getLogger(logginadvice.class);
 
 	@Pointcut(value = "execution(* com.customerApi.api.*.*.*(..))")
 	public void myPointCut() {

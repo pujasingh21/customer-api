@@ -1,8 +1,7 @@
-package com.customerApi.api.modals;
+package com.customer.api.modals;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -15,9 +14,8 @@ public class Customer {
 	
 	@Id	
 	@GeneratedValue
-	private int id;
-	
-	@NotNull
+	private Long id;
+
 	@Size(min=2, message="First Name should have atleast 2 characters")
 	private String firstName;
 	
@@ -38,13 +36,11 @@ public class Customer {
 	@NotBlank
 	@Size(min=10, max=11, message="Please enter valid Contact number")
 	private String contact;
-	
-	
 	public Customer()
 	{
 		
 	}
-	public Customer(int id,String fname, String lname, String uname, String pswd, String address, String contact)
+	public Customer(Long id,String fname, String lname, String uname, String pswd, String address, String contact)
 	{
 		this.id=id;
 		this.firstName=fname;
@@ -86,10 +82,10 @@ public class Customer {
 	}
 
 	
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	
